@@ -1,3 +1,5 @@
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 module.exports = {
   entry: './app/app.jsx',
   output: {
@@ -23,8 +25,9 @@ module.exports = {
         exclude: /(node_modules|bower_components)/ // exclude these directories from babel-loader
       },
       // For bootstrap
-      { test: /\.css$/, loaders: ['style', 'css'] },
-      { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
+      // { test: /\.css$/, loaders: ['style', 'css'] },
+      // { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
+      { test: /\.(css|scss)$/, loader: ExtractTextPlugin.extract('css!sass') },
       { test: /\.png$/, loader: "url-loader?limit=100000" },
       { test: /\.jpg$/, loader: "file-loader" },
       {
@@ -36,5 +39,11 @@ module.exports = {
       }
     ]
   },
-  devtool: 'source-map' // Better looking debuuging code, as orginal - use: debugger;
+  // Load css and sass files into 1 file
+  plugins: [
+    new ExtractTextPlugin('public/style.css', {
+        allChunks: true
+    })
+  ]
+  // devtool: 'source-map' // Better looking debuuging code, as orginal - use: debugger;
 };
